@@ -87,9 +87,6 @@ export default function Hero() {
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
         </Link>
 
-        <p className="mt-4 text-sm text-slate-400 font-medium">
-          No credit card required
-        </p>
       </div>
     </section>
   );
