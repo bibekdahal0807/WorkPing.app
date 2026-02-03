@@ -1,2 +1,16 @@
-// Tailwind CSS v4 doesn't need a config file for basic usage
-// Custom colors are defined in globals.css using @theme
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+export default config

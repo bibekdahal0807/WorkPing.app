@@ -1,6 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
+:root {
   --color-primary: #4F46E5;
   --color-highlight: #FEF08A;
   --color-muted: #6B7280;
