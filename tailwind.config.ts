@@ -9,7 +9,13 @@ const config: Config = {
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#4F46E5',
+        highlight: '#FEF08A',
+        muted: '#6B7280',
+      },
+    },
   },
   plugins: [],
 }
