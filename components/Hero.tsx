@@ -14,7 +14,7 @@ export default function Hero() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
           </span>
-          New: AI-powered commit summaries
+          New: Client-ready commit summaries
         </span>
       </div>
 
@@ -86,6 +86,7 @@ export default function Hero() {
           {/* Shine Effect */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
         </Link>
+
 
       </div>
     </section>

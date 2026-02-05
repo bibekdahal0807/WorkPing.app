@@ -13,48 +13,52 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
- const handleSignup = async () => {
-  setLoading(true);
-  setError(null);
+  const handleSignup = async () => {
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
+    setLoading(true);
+    setError(null);
 
-  if (error) {
-    setError(error.message);
-    setLoading(false);
-    return;
-  }
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-  const user = data.user;
-  if (!user) {
-    setLoading(false);
-    return;
-  }
-
-  // ✅ SAFE profile creation (no duplicate errors)
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .upsert(
-      {
-        id: user.id,
-        email: user.email,
-      },
-      {
-        onConflict: "id",
+      if (error) {
+        setError(error.message);
+        setLoading(false);
+        return;
       }
-    );
 
-  // 🚫 DO NOT BLOCK USER ON PROFILE ERROR
-  if (profileError) {
-    console.warn("Profile upsert warning:", profileError.message);
-  }
+      // Profile will be created on dashboard visit
+      window.location.href = "/dashboard";
+    } catch (err) {
+      setError("Signup failed. Please try again.");
+      setLoading(false);
+    }
+  };
 
-  // ✅ Always continue
-  window.location.href = "/dashboard";
-};
+  const handleGitHubSignup = async () => {
+    setLoading(true);
+    setError(null);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        scopes: "repo read:user",
+        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+      },
+    });
+
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen relative">
@@ -76,15 +80,28 @@ export default function SignupPage() {
               Create your account
             </h1>
 
-            <div className="space-y-4 mb-6">
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-slate-100"
-              />
+            {/* GitHub Signup */}
+            <button
+              onClick={handleGitHubSignup}
+              disabled={loading}
+              className="w-full bg-[#1E293B] text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-all disabled:opacity-60 active:scale-95 flex items-center justify-center gap-3 mb-6"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                <path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.1 3.29 9.42 7.86 10.95.57.1.78-.25.78-.55v-2.02c-3.2.7-3.87-1.55-3.87-1.55-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.03 1.78 2.7 1.27 3.36.97.1-.75.4-1.27.72-1.56-2.56-.3-5.25-1.3-5.25-5.77 0-1.27.45-2.3 1.2-3.12-.12-.3-.52-1.52.12-3.16 0 0 .98-.32 3.2 1.2a11 11 0 0 1 5.82 0c2.22-1.52 3.2-1.2 3.2-1.2.64 1.64.24 2.86.12 3.16.75.82 1.2 1.85 1.2 3.12 0 4.48-2.7 5.47-5.28 5.76.41.36.77 1.07.77 2.15v3.18c0 .3.21.66.78.55 4.57-1.53 7.86-5.85 7.86-10.95C23.5 5.74 18.27.5 12 .5z" />
+              </svg>
+              {loading ? "Creating account..." : "Continue with GitHub"}
+            </button>
 
+            {/* Divider */}
+            <div className="relative mb-6 flex items-center">
+              <div className="flex-grow border-t border-slate-100" />
+              <span className="mx-4 text-xs font-semibold text-slate-400 uppercase tracking-widest">
+                OR
+              </span>
+              <div className="flex-grow border-t border-slate-100" />
+            </div>
+
+            <div className="space-y-4 mb-6">
               <input
                 type="email"
                 placeholder="Email address"
@@ -113,9 +130,9 @@ export default function SignupPage() {
             <button
               onClick={handleSignup}
               disabled={loading}
-              className="w-full bg-[#1E293B] text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-all disabled:opacity-60 active:scale-95 active:bg-slate-900"
+              className="w-full bg-slate-600 text-white py-3 rounded-xl font-bold hover:bg-slate-700 transition-all disabled:opacity-60"
             >
-              {loading ? "Creating account..." : "Sign up"}
+              {loading ? "Creating account..." : "Sign up with Email"}
             </button>
 
             {error && (

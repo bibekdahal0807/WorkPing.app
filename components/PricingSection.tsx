@@ -1,3 +1,7 @@
+'use client';
+
+import Link from "next/link";
+
 export default function PricingSection() {
   return (
     <section id="pricing" className="py-32 px-6">
@@ -11,7 +15,7 @@ export default function PricingSection() {
         </p>
 
         {/* Pricing cards */}
-        <div className="mt-20 grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="mt-20 grid grid-cols-1 gap-8 md:grid-cols-2">
           
           {/* Free */}
           <div className="rounded-3xl border bg-white p-8 text-left shadow-sm">
@@ -23,16 +27,15 @@ export default function PricingSection() {
             </div>
 
             <ul className="mt-8 space-y-4 text-gray-700">
-              <li>✓ 1 client</li>
-              <li>✓ 3 updates per month</li>
-              <li>✓ GitHub integration</li>
-              <li>✓ Manual Note</li>
-              <li>✓ 1 AI-generated update</li>
+              <li>✓ Connect GitHub</li>
+              <li>✓ View recent activity</li>
+              <li>✓ Preview client update</li>
+              <li>✓ Manual editing</li>
             </ul>
 
-            <button className="mt-10 w-full rounded-xl border px-4 py-3 font-semibold">
+            <Link href="/login" className="mt-10 w-full rounded-xl border px-4 py-3 font-semibold block text-center hover:bg-gray-50 transition-colors">
               Get started
-            </button>
+            </Link>
           </div>
 
           {/* Pro (highlighted) */}
@@ -45,42 +48,22 @@ export default function PricingSection() {
             <h3 className="text-2xl font-bold">Starter</h3>
 
             <div className="mt-4">
-              <span className="text-5xl font-extrabold">$4.99</span>
+              <span className="text-5xl font-extrabold">$5</span>
               <span className="ml-2 text-indigo-200">/month</span>
             </div>
 
             <ul className="mt-8 space-y-4">
+              <li>✓ Generate polished client updates</li>
               <li>✓ Unlimited clients</li>
-              <li>✓ 15 AI-generated updates</li>
-              <li>✓ GitHub activity summaries</li>
-              <li>✓ Manual notes included</li>
-              <li>✓ Review & copy (Markdown)</li>
+              <li>✓ Edit, copy, reuse</li>
+              <li>✓ Cancel anytime</li>
             </ul>
 
-            <button className="mt-10 w-full rounded-xl bg-white px-4 py-3 font-semibold text-indigo-600">
-              Upgrade
-            </button>
-          </div>
-
-          {/* Agency */}
-          <div className="rounded-3xl border bg-white p-8 text-left shadow-sm">
-            <h3 className="text-2xl font-bold text-gray-900">Pro</h3>
-
-            <div className="mt-4">
-              <span className="text-5xl font-extrabold">$9.99</span>
-              <span className="ml-2 text-gray-500">/month</span>
-            </div>
-
-            <ul className="mt-8 space-y-4 text-gray-700">
-              <li>✓ Everything in Starter</li>
-              <li>✓ 40 updates / month</li>
-              <li>✓ Custom update tone & structure</li>
-              <li>✓ Weekly auto-generation</li>
-              <li>✓ Early access to new features</li>
-            </ul>
-
-            <button className="mt-10 w-full rounded-xl border px-4 py-3 font-semibold">
-              Go Pro
+            <button 
+              onClick={() => alert('Email muraridahal0807@gmail.com for early access to WorkPing Starter!')}
+              className="mt-10 w-full rounded-xl bg-white px-4 py-3 font-semibold text-indigo-600"
+            >
+              Request Early Access
             </button>
           </div>
 
