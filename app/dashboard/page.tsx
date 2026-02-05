@@ -136,7 +136,7 @@ export default function DashboardPage() {
     }
     
     // Condition 3: Usage limit exceeded
-    if (profile.updates_used >= 3) {
+    if (profile.updates_used >= 1) {
       setShowLimitModal(true);
       return;
     }
