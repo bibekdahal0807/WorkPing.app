@@ -6,12 +6,6 @@ export async function GET() {
   const supabase = await supabaseServer();
   const { data } = await supabase.auth.getSession();
 
-  console.log("SESSION DEBUG:", {
-    hasSession: !!data.session,
-    hasProviderToken: !!data.session?.provider_token,
-    providerTokenStart: data.session?.provider_token?.substring(0, 10)
-  });
-
   if (!data.session) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
