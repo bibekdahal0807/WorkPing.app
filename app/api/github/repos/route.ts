@@ -8,7 +8,6 @@ export async function GET() {
 
   console.log("SESSION DEBUG:", {
     hasSession: !!data.session,
-    provider: data.session?.app_metadata?.provider,
     hasProviderToken: !!data.session?.provider_token,
     providerTokenStart: data.session?.provider_token?.substring(0, 10)
   });
