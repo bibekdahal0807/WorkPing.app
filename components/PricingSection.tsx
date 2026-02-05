@@ -1,8 +1,45 @@
 'use client';
 
 import Link from "next/link";
+import { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function PricingSection() {
+  const [starterEmail, setStarterEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [starterMessage, setStarterMessage] = useState("");
+
+  const handleEarlyAccess = async () => {
+    if (!starterEmail) return;
+
+    setLoading(true);
+    setStarterMessage("");
+
+    try {
+      const { error } = await supabase
+        .from('waitlist')
+        .insert({
+          email: starterEmail.trim(),
+          source: 'starter_early_access'
+        });
+
+      if (error) {
+        if (error.code === '23505') {
+          setStarterMessage("You're already on the list! 🎉");
+        } else {
+          setStarterMessage("Something went wrong. Please try again.");
+        }
+      } else {
+        setStarterMessage("Thanks! We'll contact you soon 🚀");
+        setStarterEmail("");
+      }
+    } catch {
+      setStarterMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section id="pricing" className="py-32 px-6">
       <div className="mx-auto max-w-6xl text-center">
@@ -38,7 +75,7 @@ export default function PricingSection() {
             </Link>
           </div>
 
-          {/* Pro (highlighted) */}
+          {/* Starter (highlighted) */}
           <div className="relative rounded-3xl bg-gradient-to-b from-indigo-500 to-indigo-600 p-8 text-left text-white shadow-xl">
             {/* Popular badge */}
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 px-4 py-1 text-sm font-bold text-gray-900">
@@ -59,12 +96,31 @@ export default function PricingSection() {
               <li>✓ Cancel anytime</li>
             </ul>
 
-            <button 
-              onClick={() => alert('Email muraridahal0807@gmail.com for early access to WorkPing Starter!')}
-              className="mt-10 w-full rounded-xl bg-white px-4 py-3 font-semibold text-indigo-600"
-            >
-              Request Early Access
-            </button>
+            <div className="mt-8 space-y-3">
+              <input
+                type="email"
+                placeholder="Enter your email for early access"
+                value={starterEmail}
+                onChange={(e) => setStarterEmail(e.target.value)}
+                className="w-full px-3 py-2 border border-white/30 rounded-lg bg-white/10 text-white placeholder-white/70 focus:ring-2 focus:ring-white/50 focus:border-white text-sm"
+              />
+              <button 
+                onClick={handleEarlyAccess}
+                disabled={loading || !starterEmail}
+                className="w-full rounded-xl bg-white px-4 py-3 font-semibold text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Requesting..." : "Request Early Access"}
+              </button>
+              {starterMessage && (
+                <p className={`text-xs text-center ${
+                  starterMessage.includes('already') || starterMessage.includes('Thanks') 
+                    ? 'text-green-200' 
+                    : 'text-red-200'
+                }`}>
+                  {starterMessage}
+                </p>
+              )}
+            </div>
           </div>
 
         </div>

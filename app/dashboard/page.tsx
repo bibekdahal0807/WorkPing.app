@@ -17,6 +17,9 @@ export default function DashboardPage() {
   const [copied, setCopied] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showLimitModal, setShowLimitModal] = useState(false);
+  const [limitEmail, setLimitEmail] = useState("");
+  const [limitLoading, setLimitLoading] = useState(false);
+  const [limitMessage, setLimitMessage] = useState("");
   const [profile, setProfile] = useState<{
     updates_used: number;
     last_used_at: string | null;
@@ -368,25 +371,68 @@ export default function DashboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-8 max-w-md mx-4 shadow-xl">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              You've used your free update
+              You've used your free updates
             </h3>
             <p className="text-gray-600 mb-6">
               We're validating WorkPing with early users. Join our early access to get unlimited updates.
             </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowLimitModal(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-              >
-                Close
-              </button>
+            <div className="space-y-3 mb-6">
+              <input
+                type="email"
+                placeholder="Enter your email for early access"
+                value={limitEmail}
+                onChange={(e) => setLimitEmail(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              />
               <button 
-                onClick={() => alert('Email muraridahal0807@gmail.com for early access to WorkPing!')}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                onClick={async () => {
+                  if (!limitEmail) return;
+                  setLimitLoading(true);
+                  setLimitMessage("");
+                  try {
+                    const { error } = await supabase
+                      .from('waitlist')
+                      .insert({
+                        email: limitEmail.trim(),
+                        source: 'dashboard_limit'
+                      });
+                    if (error) {
+                      if (error.code === '23505') {
+                        setLimitMessage("You're already on the list! 🎉");
+                      } else {
+                        setLimitMessage("Something went wrong. Please try again.");
+                      }
+                    } else {
+                      setLimitMessage("Thanks! We'll contact you soon 🚀");
+                      setLimitEmail("");
+                    }
+                  } catch {
+                    setLimitMessage("Something went wrong. Please try again.");
+                  } finally {
+                    setLimitLoading(false);
+                  }
+                }}
+                disabled={limitLoading || !limitEmail}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Join early access
+                {limitLoading ? "Requesting..." : "Request Early Access"}
               </button>
+              {limitMessage && (
+                <p className={`text-xs text-center ${
+                  limitMessage.includes('already') || limitMessage.includes('Thanks') 
+                    ? 'text-green-600' 
+                    : 'text-red-600'
+                }`}>
+                  {limitMessage}
+                </p>
+              )}
             </div>
+            <button
+              onClick={() => setShowLimitModal(false)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
