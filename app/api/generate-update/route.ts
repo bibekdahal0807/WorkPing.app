@@ -7,13 +7,13 @@ export async function POST(req: Request) {
   const prCount = pulls.length;
 
   // Get actual commit messages and PR titles
-  const commitMessages = commits.map((c: any) => c.commit.message);
-  const prTitles = pulls.map((p: any) => p.title);
+  const commitMessages: string[] = commits.map((c: any) => c.commit.message);
+  const prTitles: string[] = pulls.map((p: any) => p.title);
   
   // Build highlights from actual commit messages and PR titles
-  const highlights = [];
-  commitMessages.forEach(msg => highlights.push(msg));
-  prTitles.forEach(title => highlights.push(title));
+  const highlights: string[] = [];
+  commitMessages.forEach((msg: string) => highlights.push(msg));
+  prTitles.forEach((title: string) => highlights.push(title));
   
   // Default if no work found
   if (highlights.length === 0) {
